@@ -1,0 +1,17 @@
+{
+  "name": "fibonacci",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cross-env DEBUG=fibonacci:* node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "cross-env": "5.1.x",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "hbs": "~4.0.4",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
+  }
+}
