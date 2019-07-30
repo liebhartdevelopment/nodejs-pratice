@@ -1,12 +1,13 @@
-const createError = require("http-errors");
-const hbs = require("hbs");
 const express = require("express");
+const hbs = require("hbs");
 const path = require("path");
+const favicon = require("serve-favicon");
+const logger = require("logger");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
+const bodyParser = require("body-parser");
 
-const indexRouter = require("./routes/index");
-const fibonacciRouter = require("./routes/fibonacci");
+const index = require("./routes/index");
+const fibonacci = require("./routes/fibonacci");
 
 const app = express();
 
@@ -17,16 +18,18 @@ hbs.registerPartials(path.join(__dirname, "partials"));
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/fibonacci", fibonacciRouter);
+app.use("/", index);
+app.use("/fibonacci", fibonacci);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  var err = new Error("Not Found");
+  err.status = 404;
+  next(err);
 });
 
 // error handler
