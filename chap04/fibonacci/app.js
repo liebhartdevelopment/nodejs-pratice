@@ -2,7 +2,7 @@ const express = require("express");
 const hbs = require("hbs");
 const path = require("path");
 const favicon = require("serve-favicon");
-const logger = require("logger");
+const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
