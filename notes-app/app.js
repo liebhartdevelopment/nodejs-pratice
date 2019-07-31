@@ -21,6 +21,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  "/assets/vendor/bootstrap/js",
+  express.static(
+    path.join(__dirname, "node_modules", "bootstrap", "dist", "js")
+  )
+);
+app.use(
+  "/assets/vendor/bootstrap/css",
+  express.static(path.join(__dirname, "minty"))
+);
+app.use(
+  "/assets/vendor/jquery",
+  express.static(path.join(__dirname, "node_modules", "jquery"))
+);
+app.use(
+  "/assets/vendor/popper.js",
+  express.static(path.join(__dirname, "node_modules", "popper.js", "dist"))
+);
+app.use(
+  "/assets/vendor/feather-icons",
+  express.static(path.join(__dirname, "node_modules", "feather-icons", "dist"))
+);
 
 app.use("/", index);
 // app.use("/users", users);
