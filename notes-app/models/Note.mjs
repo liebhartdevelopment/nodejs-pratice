@@ -26,7 +26,7 @@ export default class Note {
   }
 
   get JSON() {
-    return this.JSON.stringify({
+    return JSON.stringify({
       key: this.key,
       title: this.title,
       body: this.body
