@@ -2,7 +2,7 @@ const _note_key = Symbol("key"),
   _note_title = Symbol("title"),
   _note_body = Symbol("body");
 
-module.exports = class Note {
+export default class Note {
   constructor(key, title, body) {
     this[_note_key] = key;
     this[_note_title] = title;
@@ -24,4 +24,18 @@ module.exports = class Note {
   set body(newBody) {
     this[_note_body] = newBody;
   }
-};
+
+  get JSON() {
+    return this.JSON.stringify({
+      key: this.key,
+      title: this.title,
+      body: this.body
+    });
+  }
+
+  static fromJSON(json) {
+    var data = JSON.parse(json);
+    var note = new Note(data.key, data.title, data.body);
+    return note;
+  }
+}
