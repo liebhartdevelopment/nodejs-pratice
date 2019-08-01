@@ -16,7 +16,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 hbs.registerPartials(path.join(__dirname, "partials"));
 
-app.use(logger("dev"));
+app.use(logger(process.env.REQUEST_LOG_FORMAT || "dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -33,7 +33,7 @@ app.use(
 );
 app.use(
   "/assets/vendor/jquery",
-  express.static(path.join(__dirname, "node_modules", "jquery"))
+  express.static(path.join(__dirname, "node_modules", "jquery", "dist"))
 );
 app.use(
   "/assets/vendor/popper.js",
