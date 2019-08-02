@@ -1,6 +1,6 @@
-const _note_key = Symbol("key"),
-  _note_title = Symbol("title"),
-  _note_body = Symbol("body");
+const _note_key = Symbol("key");
+const _note_title = Symbol("title");
+const _note_body = Symbol("body");
 
 export default class Note {
   constructor(key, title, body) {

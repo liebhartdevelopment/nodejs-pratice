@@ -8,6 +8,7 @@
     "start-level": "cross-env DEBUG=notes-app:* NOTES_MODEL=level nodemon --experimental-modules ./bin/www.mjs ",
     "start-sqlite3": "cross-env DEBUG=notes-app:* SQLITE_FILE=chap07.sqlite3 NOTES_MODEL=sqlite3 nodemon --experimental-modules ./bin/www.mjs",
     "start-sequelize": "cross-env DEBUG=notes-app:* SEQUELIZE_CONNECT=models/sequelize-sqlite.yaml NOTES_MODEL=sequelize nodemon --experimental-modules ./bin/www.mjs",
+    "start-mongodb": "cross-env DEBUG=notes-app:* MONGO_URL=mongodb://localhost/ MONGO_DBNAME=notesdb NOTES_MODEL=mongodb nodemon --experimental-modules ./bin/www.mjs",
     "sqlite3-setup": "sqlite3 chap07.sqlite3 --init models/schema-sqlite3.sql"
   },
   "dependencies": {

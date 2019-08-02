@@ -6,12 +6,16 @@
             <p>Key: {{ notekey }}</p>
         </div>
     </div>
-    {{#if notekey}}
+    {{#if notekey }}
     <div class="row">
         <div class="col-xs-12">
             <div class="btn-group">
-                <a href="/notes/destroy?key={{notekey}}" class="btn btn-outline-dark" role="button">Delete</a>
-                <a href="/notes/edit?key={{notekey}}" class="btn btn-outline-dark" role="button">Edit</a>
+                <a class="btn btn-outline-dark" href="/notes/destroy?key={{notekey}}" role="button">
+                    Delete
+                </a>
+                <a class="btn btn-outline-dark" href="/notes/edit?key={{notekey}}" role="button">
+                    Edit
+                </a>
             </div>
         </div>
     </div>
