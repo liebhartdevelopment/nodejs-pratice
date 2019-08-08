@@ -4,7 +4,7 @@
   "description": "",
   "main": "user-server.mjs",
   "scripts": {
-    "start": "cross-env DEBUG=users:* PORT=3333 SEQUELIZE_CONNECT=sequelize-sqlite.yaml nodemon --experimental-modules user-server"
+    "start": "cross-env DEBUG=users:* PORT=3030 SEQUELIZE_CONNECT=sequelize-sqlite.yaml nodemon --experimental-modules user-server"
   },
   "author": "Nathaniel Liebhart",
   "license": "MIT",
@@ -16,9 +16,10 @@
     "debug": "^4.1.1",
     "fs-extra": "^8.1.0",
     "js-yaml": "^3.13.1",
+    "mysql": "2.15.x",
     "restify": "^8.4.0",
     "restify-clients": "1.5.x",
-    "sequelize": "^5.12.2",
+    "sequelize": "4.31.x",
     "sqlite3": "^4.0.9"
   },
   "devDependencies": {

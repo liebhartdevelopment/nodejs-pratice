@@ -16,8 +16,8 @@ client.post(
     username: "me",
     password: "w0rd",
     provider: "local",
-    familyName: "Doe",
-    givenName: "John",
+    familyName: "Einarrsdottir",
+    givenName: "Ashildr",
     middleName: "",
     emails: [],
     photos: []
