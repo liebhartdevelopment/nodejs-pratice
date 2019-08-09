@@ -6,6 +6,7 @@
             <p>Key: {{ notekey }}</p>
         </div>
     </div>
+    {{#if user }}
     {{#if notekey }}
     <div class="row">
         <div class="col-xs-12">
@@ -19,5 +20,6 @@
             </div>
         </div>
     </div>
+    {{/if}}
     {{/if}}
 </div>

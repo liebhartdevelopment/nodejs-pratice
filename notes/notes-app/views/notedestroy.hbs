@@ -1,5 +1,6 @@
 <form method='POST' action='/notes/destroy/confirm'>
     <div class="container-fluid">
+        {{#if user}}
         <input type='hidden' name='notekey' value='{{#if note}}{{notekey}}{{/if}}'>
         <p class="form-text">Delete {{note.title}}?</p>
 
@@ -9,6 +10,8 @@
                 Cancel
             </a>
         </div>
-
+        {{else}}
+        {{> not-logged-in }}
+        {{/if}}
     </div>
 </form>
