@@ -13,11 +13,11 @@ client.basicAuth("them", "D4ED43C0-8BD6-4FE2-B358-7C0E230D11EF");
 client.post(
   "/create-user",
   {
-    username: "me",
-    password: "w0rd",
+    username: "jdoe",
+    password: "password",
     provider: "local",
-    familyName: "Einarrsdottir",
-    givenName: "Ashildr",
+    familyName: "Doe",
+    givenName: "John",
     middleName: "",
     emails: [],
     photos: []

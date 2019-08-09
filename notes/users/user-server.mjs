@@ -6,7 +6,6 @@ const log = DBG("users:service");
 const error = DBG("users:error");
 
 import * as usersModel from "./users-sequelize";
-import { unwatchFile } from "fs";
 
 var server = restify.createServer({
   name: "User-Auth-Service",
@@ -35,10 +34,13 @@ server.post("/create-user", async (req, res, next) => {
       req.params.emails,
       req.params.photos
     );
+    log("created " + util.inspect(result));
+    res.contentType = "json";
     res.send(result);
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/create-user ${err.stack}`);
     next(false);
   }
 });
@@ -56,10 +58,13 @@ server.post("/update-user/:username", async (req, res, next) => {
       req.params.emails,
       req.params.photos
     );
+    log("updated " + util.inspect(result));
+    res.contentType = "json";
     res.send(usersModel.sanitizedUser(result));
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/update-user/${req.params.username} ${err.stack}`);
     next(false);
   }
 });
@@ -79,10 +84,13 @@ server.post("/find-or-create", async (req, res, next) => {
       emails: req.params.emails,
       photos: req.params.photos
     });
+    log("find-or-created " + util.inspect(result));
+    res.contentType = "json";
     res.send(result);
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/find-or-create ${err.stack}`);
     next(false);
   }
 });
@@ -94,11 +102,13 @@ server.get("/find/:username", async (req, res, next) => {
     if (!user) {
       res.send(404, new Error("Did not find " + req.params.username));
     } else {
+      res.contentType = "json";
       res.send(user);
     }
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/find/${req.params.username} ${err.stack}`);
     next(false);
   }
 });
@@ -107,25 +117,31 @@ server.get("/find/:username", async (req, res, next) => {
 server.del("/destroy/:username", async (req, res, next) => {
   try {
     await usersModel.destroy(req.params.username);
+    res.contentType = "json";
     res.send({});
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/destroy/${req.params.username} ${err.stack}`);
     next(false);
   }
 });
 
 // Check password
 server.post("/passwordCheck", async (req, res, next) => {
+  log(`passwordCheck ${util.inspect(req.params)}`);
   try {
-    await usersModel.userPasswordCheck(
+    var checked = await usersModel.userPasswordCheck(
       req.params.username,
       req.params.password
     );
-    res.send(check);
+    log(`passwordCheck result=${util.inspect(checked)}`);
+    res.contentType = "json";
+    res.send(checked);
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/passwordCheck ${err.stack}`);
     next(false);
   }
 });
@@ -135,10 +151,13 @@ server.get("/list", async (req, res, next) => {
   try {
     var userlist = await usersModel.listUsers();
     if (!userlist) userlist = [];
+    log(util.inspect(userlist));
+    res.contentType = "json";
     res.send(userlist);
     next(false);
   } catch (err) {
     res.send(500, err);
+    error(`/list ${err.stack}`);
     next(false);
   }
 });
@@ -149,15 +168,11 @@ server.listen(process.env.PORT, "localhost", function() {
 
 // Mimic API Key authentication.
 
-var apiKeys = [
-  {
-    user: "them",
-    key: "D4ED43C0-8BD6-4FE2-B358-7C0E230D11EF"
-  }
-];
+var apiKeys = [{ user: "them", key: "D4ED43C0-8BD6-4FE2-B358-7C0E230D11EF" }];
 
 function check(req, res, next) {
-  if (req.authorization) {
+  log(`check ${util.inspect(req.authorization)}`);
+  if (req.authorization && req.authorization.basic) {
     var found = false;
     for (let auth of apiKeys) {
       if (
@@ -171,10 +186,12 @@ function check(req, res, next) {
     if (found) next();
     else {
       res.send(401, new Error("Not authenticated"));
+      error("Failed authentication check " + util.inspect(req.authorization));
       next(false);
     }
   } else {
     res.send(500, new Error("No Authorization Key"));
+    error("NO AUTHORIZATION");
     next(false);
   }
 }

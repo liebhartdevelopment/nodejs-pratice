@@ -3,7 +3,6 @@ import jsyaml from "js-yaml";
 import fs from "fs-extra";
 import util from "util";
 import DBG from "debug";
-import { finished } from "stream";
 const log = DBG("users:model-users");
 const error = DBG("users:error");
 
@@ -12,8 +11,10 @@ var sequlz;
 
 async function connectDB() {
   if (SQUser) return SQUser.sync();
+
   const yamltext = await fs.readFile(process.env.SEQUELIZE_CONNECT, "utf8");
   const params = await jsyaml.safeLoad(yamltext, "utf8");
+  log("Sequelize params " + util.inspect(params));
 
   if (!sequlz)
     sequlz = new Sequelize(
@@ -23,14 +24,13 @@ async function connectDB() {
       params.params
     );
 
-  // These fields largely come from the Passport / Portable Contacts
+  // These fields largely come from the Passport / Portable Contacts schema.
   // See http://www.passportjs.org/docs/profile
   //
-  // The emails and photos fields are arrays in Portable Contacts.
-  // We'd need to set up additional tables for those.
+  // The emails and photos fields are arrays in Portable Contacts.  We'd need to set up
+  // additional tables for those.
   //
-  // The Portable Contacts "id" field maps to the "username" field
-  schema.here;
+  // The Portable Contacts "id" field maps to the "username" field here
   if (!SQUser)
     SQUser = sequlz.define("User", {
       username: { type: Sequelize.STRING, unique: true },
@@ -57,12 +57,12 @@ export async function create(
 ) {
   const SQUser = await connectDB();
   return SQUser.create({
-    username,
-    password,
-    provider,
-    familyName,
-    givenName,
-    middleName,
+    username: username,
+    password: password,
+    provider: provider,
+    familyName: familyName,
+    givenName: givenName,
+    middleName: middleName,
     emails: JSON.stringify(emails),
     photos: JSON.stringify(photos)
   });
@@ -81,44 +81,53 @@ export async function update(
   const user = await find(username);
   return user
     ? user.updateAttributes({
-        password,
-        provider,
-        familyName,
-        givenName,
-        middleName,
+        password: password,
+        provider: provider,
+        familyName: familyName,
+        givenName: givenName,
+        middleName: middleName,
         emails: JSON.stringify(emails),
         photos: JSON.stringify(photos)
       })
     : undefined;
 }
 
-export async function find(username) {
-  const SQUser = await connectDB();
-  const user = await SQUser.find({ where: { username } });
-  const ret = user ? sanitizedUser(user) : undefined;
-  return ret;
-}
-
 export async function destroy(username) {
   const SQUser = await connectDB();
-  const user = await SQUser.find({ where: { username } });
-  if (!user) throw new Error(`Did not find requested: ${username} to delete!`);
+  const user = await SQUser.find({ where: { username: username } });
+  if (!user)
+    throw new Error("Did not find requested " + username + " to delete");
   user.destroy();
+}
+
+export async function find(username) {
+  log("find  " + username);
+  const SQUser = await connectDB();
+  const user = await SQUser.find({ where: { username: username } });
+  const ret = user ? sanitizedUser(user) : undefined;
+  // log(`find returning ${util.inspect(ret)}`);
+  return ret;
 }
 
 export async function userPasswordCheck(username, password) {
   const SQUser = await connectDB();
-  const user = await SQUser.find({ where: { username } });
+  const user = await SQUser.find({ where: { username: username } });
+  log(
+    "userPasswordCheck query= " +
+      username +
+      " " +
+      password +
+      " user= " +
+      user.username +
+      " " +
+      user.password
+  );
   if (!user) {
-    return { check: false, username, message: "Could not find user!" };
+    return { check: false, username: username, message: "Could not find user" };
   } else if (user.username === username && user.password === password) {
     return { check: true, username: user.username };
   } else {
-    return {
-      check: false,
-      username,
-      message: "Incorrect password! Please try again."
-    };
+    return { check: false, username: username, message: "Incorrect password" };
   }
 }
 
@@ -133,18 +142,18 @@ export async function findOrCreate(profile) {
     profile.givenName,
     profile.middleName,
     profile.emails,
-    profile,
-    photos
+    profile.photos
   );
 }
 
-export async function listUser() {
+export async function listUsers() {
   const SQUser = await connectDB();
   const userlist = await SQUser.findAll({});
   return userlist.map(user => sanitizedUser(user));
 }
 
 export function sanitizedUser(user) {
+  // log(util.inspect(user));
   var ret = {
     id: user.username,
     username: user.username,
