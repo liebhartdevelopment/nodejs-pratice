@@ -19,7 +19,7 @@
     "feather-icons": ">=4.5.x",
     "fs-extra": "^5.0.0",
     "hbs": "~4.0.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "js-yaml": "^3.13.1",
     "level": "^5.0.1",
     "mongodb": "^3.3.0-beta2",
